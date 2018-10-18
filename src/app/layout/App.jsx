@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-import { Container } from 'semantic-ui-react'
+import { Container } from 'semantic-ui-react';
+import { Route, Switch } from 'react-router-dom';
 // import { Button } from 'semantic-ui-react';
-import EventDashboard from '../../features/event/EventDashboard/EventDashboard'
-import NavBar from '../../features/nav/NavBar/NavBar'
+import NavBar from '../../features/nav/NavBar/NavBar';
+import HomePage from '../../features/home/HomePage';
+import EventDashboard from '../../features/event/EventDashboard/EventDashboard';
+import EventDetailedPage from '../../features/event/EventDetailed/EventDetailedPage';
+import PeopleDashboard from '../../features/user/PeopleDashboard/PeopleDashboard';
+import UserDetailedPage from '../../features/user/UserDetailed/UserDetailedPage';
+import SettingsDashboard from '../../features/user/Settings/SettingsDashboard';
+import EventForm from '../../features/event/EventForm/EventForm';
 // import logo from './logo.svg';
 // import './App.css';
 
@@ -11,22 +18,39 @@ class App extends Component {
     return (
       // <div className='App'>
       <div>
+        <Switch>
+          <Route exact path='/' component={HomePage} />
+        </Switch>
 
-        <NavBar />
-        <Container className="main">
-          <EventDashboard />
-        </Container>
+        <Route path='/(.+)' render={() => (
+          
+          <div>
+            <NavBar />
+            <Container className="main">
+              <Switch>
+                {/* <EventDashboard /> */}
+                <Route path='/events' component={EventDashboard} />
+                <Route path='/event/:id' component={EventDetailedPage} />
+                <Route path='/people' component={PeopleDashboard} />
+                <Route path='/profile/:id' component={UserDetailedPage} />
+                <Route path='/settings' component={SettingsDashboard} />
+                <Route path='/createEvent' component={EventForm} />
+              </Switch>
+            </Container>
+
+            {/* <h1>Re-vents</h1> */}
+            {/* <button className="ui icon button">
+              <i className="smile icon"></i>
+              CSS Button
+            </button>
+            <div className="ui button">Pavel Klos, Ústecká 3052, Kladno, 27201</div>
+            <Button icon="smile" content="React Button" /> */}
+          </div>
+        )} />
+
         
-        {/* <h1>Re-vents</h1> */}
-        {/* <button className="ui icon button">
-          <i className="smile icon"></i>
-          CSS Button
-        </button>
-        <div className="ui button">Pavel Klos, Ústecká 3052, Kladno, 27201</div>
-        <Button icon="smile" content="React Button" /> */}
-
       </div>
-
+      
       // <div className="App">
       //   <header className="App-header">
       //     <img src={logo} className="App-logo" alt="logo" />
