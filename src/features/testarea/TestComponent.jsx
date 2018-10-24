@@ -6,6 +6,7 @@ import { Button } from 'semantic-ui-react'
 import Script from 'react-load-script'
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import { incrementCounter, decrementCounter } from './testActions'
+import { openModal } from '../modals/modalActions'
 
 const mapState = (state) => ({
   data: state.test.data, // test = testReducer, test.data = 42
@@ -13,7 +14,8 @@ const mapState = (state) => ({
 
 const actions = {
   incrementCounter,
-  decrementCounter
+  decrementCounter,
+  openModal
 }
 
 // const Marker = () => <Icon name='marker' size='big' color='red' />
@@ -55,7 +57,7 @@ class TestComponent extends Component {
       onChange: this.onChange
     }
 
-    const {incrementCounter, decrementCounter, data} = this.props;
+    const {incrementCounter, decrementCounter, data, openModal} = this.props;
 
     return (
       <div>
@@ -68,6 +70,7 @@ class TestComponent extends Component {
         <h3>testReducer.data: {data}</h3>
         <Button onClick={incrementCounter} color='green' content='Increment' />
         <Button onClick={decrementCounter} color='red' content='Decrement' />
+        <Button onClick={() => openModal('TestModal', {data: 43})} color='teal' content='Open Modal' />
         <br/><br/>
 
         <form onSubmit={this.handleFormSubmit}>
