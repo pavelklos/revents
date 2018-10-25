@@ -7,10 +7,12 @@ import EventList from "../EventList/EventList";
 // import EventForm from "../EventForm/EventForm";
 // import { createEvent, updateEvent, deleteEvent } from '../eventActions'
 import { deleteEvent } from '../eventActions'
+import LoadingComponent from '../../../app/layout/LoadingComponent'
 
 // REDUX
 const mapState = (state) => ({
-  events: state.events
+  events: state.events,
+  loading: state.async.loading
 })
 
 const actions = {
@@ -112,7 +114,8 @@ class EventDashboard extends Component {
 
   render() {
     // const {selectedEvent} = this.state;
-    const {events} = this.props; // REDUX
+    const {events, loading} = this.props; // REDUX
+    if (loading) return <LoadingComponent inverted={true} />
     return (
       <Grid>
         
