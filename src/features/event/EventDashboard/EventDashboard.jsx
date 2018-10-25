@@ -8,6 +8,7 @@ import EventList from "../EventList/EventList";
 // import { createEvent, updateEvent, deleteEvent } from '../eventActions'
 import { deleteEvent } from '../eventActions'
 import LoadingComponent from '../../../app/layout/LoadingComponent'
+import EventActivity from '../EventActivity/EventActivity'
 
 // REDUX
 const mapState = (state) => ({
@@ -131,6 +132,7 @@ class EventDashboard extends Component {
         </Grid.Column>
         
         <Grid.Column width={6}>
+          <EventActivity/>
           {/* <h2>Right Column</h2> */}
           {/* <Button onClick={this.handleFormOpen.bind(this)} positive content="Create Event" /> */}
           {/* <Button onClick={() => this.handleFormOpen()} positive content="Create Event" /> */}
