@@ -10,10 +10,10 @@ import App from "./app/layout/App";
 import * as serviceWorker from "./serviceWorker";
 import configureStore from "./app/store/configureStore";
 import ScrollToTop from "./app/common/util/ScrollToTop";
-import { loadEvents } from "./features/event/eventActions";
+// import { loadEvents } from "./features/event/eventActions";
 
 const store = configureStore();
-store.dispatch(loadEvents());
+// store.dispatch(loadEvents());
 
 // HOT MODULE REPLACEMENT - Section 01 - Video 07
 const rootEl = document.getElementById('root');
