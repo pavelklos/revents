@@ -15,7 +15,8 @@ const validate = combineValidators({
 const AccountPage = ({ error, invalid, submitting, handleSubmit, updatePassword, providerId }) => {
   return (
     <Segment>
-      <Header dividing size="large" content="Account" />
+      {/* <Header dividing size="large" content="Account" /> */}
+      <Header dividing size="large" content={'Account by [' + providerId + ']'} />
       
       {/* PASSWORD */}
       {providerId && providerId === 'password' &&
