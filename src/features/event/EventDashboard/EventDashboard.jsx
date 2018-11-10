@@ -1,30 +1,76 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux'
-import { firestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+// import { firestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { firestoreConnect } from 'react-redux-firebase'
 // import { Grid, Button } from "semantic-ui-react";
-import { Grid } from "semantic-ui-react";
+// import { Grid, Button } from "semantic-ui-react";
+import { Grid, Loader } from "semantic-ui-react";
 // import cuid from 'cuid';
 import EventList from "../EventList/EventList";
 // import EventForm from "../EventForm/EventForm";
 // import { createEvent, updateEvent, deleteEvent } from '../eventActions'
-import { deleteEvent } from '../eventActions'
+// import { deleteEvent } from '../eventActions'
+import { getEventsForDashboard } from '../eventActions'
 import LoadingComponent from '../../../app/layout/LoadingComponent'
 import EventActivity from '../EventActivity/EventActivity'
 
 // REDUX
 const mapState = (state) => ({
   // events: state.events,
-  events: state.firestore.ordered.events,
+  // events: state.firestore.ordered.events,
   // loading: state.async.loading
+  // events: []
+  events: state.events,
+  loading: state.async.loading
 })
 
 const actions = {
   // createEvent,
   // updateEvent,
-  deleteEvent
+  // deleteEvent
+  getEventsForDashboard
 }
 
 class EventDashboard extends Component {
+state = {
+  moreEvents: false,
+  loadingInitial: true,
+  loadedEvents: []
+}
+
+async componentDidMount() {
+let next = await this.props.getEventsForDashboard();
+  console.log(next);
+
+  if (next && next.docs && next.docs.length > 1) {
+    this.setState({
+      moreEvents: true,
+      loadingInitial: false,
+    })
+  }
+}
+
+componentWillReceiveProps(nextProps) {
+  if (this.props.events !== nextProps.events) {
+    this.setState({
+      loadedEvents: [...this.state.loadedEvents, ...nextProps.events]
+    })
+  }
+}
+
+getNextEvents = async () => {
+  const {events} = this.props;
+  let lastEvent = events && events[events.length -1];
+  console.log(lastEvent);
+  let next = await this.props.getEventsForDashboard(lastEvent);
+  console.log(next);
+
+  if (next && next.docs && next.docs.length <= 1) {
+    this.setState({
+      moreEvents: false
+    })
+  }
+}
 
   // constructor(props) {
   //   super(props)
@@ -105,22 +151,26 @@ class EventDashboard extends Component {
   // }
 
   // cruD = DELETE
-  handleDeleteEvent = (eventId) => () => {
-    // const updatedEvents = this.state.events.filter(e => e.id !== eventId);
-    // this.setState({
-    //   events: updatedEvents
-    // })
+  // handleDeleteEvent = (eventId) => () => {
+  //   // const updatedEvents = this.state.events.filter(e => e.id !== eventId);
+  //   // this.setState({
+  //   //   events: updatedEvents
+  //   // })
 
-    // REDUX
-    this.props.deleteEvent(eventId);
-  }
+  //   // REDUX
+  //   this.props.deleteEvent(eventId);
+  // }
 
   render() {
     // const {selectedEvent} = this.state;
     // const {events, loading} = this.props; // REDUX
     // if (loading) return <LoadingComponent inverted={true} />
-    const {events} = this.props; // REDUX
-    if (!isLoaded(events|| isEmpty(events))) return <LoadingComponent inverted={true} />
+    // const {events, loading} = this.props; // REDUX
+    const {loading} = this.props; // REDUX
+    const {moreEvents, loadedEvents} = this.state;
+    // if (!isLoaded(events|| isEmpty(events))) return <LoadingComponent inverted={true} />
+    // if (loading) return <LoadingComponent inverted={true} />
+    if (this.state.loadingInitial) return <LoadingComponent inverted={true} />
     return (
       <Grid>
         
@@ -128,11 +178,17 @@ class EventDashboard extends Component {
           {/* <h2>Left Column</h2> */}
           {/* <EventList events={eventsDashboard} /> */}
           <EventList
-            deleteEvent={this.handleDeleteEvent}
+            // deleteEvent={this.handleDeleteEvent}
             // onEventOpen={this.handleOpenEvent}
             // events={this.state.events}
-            events={events} // REDUX
+            // events={events} // REDUX
+            loading={loading}
+            moreEvents={moreEvents}
+            // events={this.state.loadedEvents} // REDUX
+            events={loadedEvents}
+            getNextEvents={this.getNextEvents}
           />
+          {/* <Button loading={loading} onClick={this.getNextEvents} diasabled={!this.state.moreEvents} content='More' color='green' floated='right'/> */}
         </Grid.Column>
         
         <Grid.Column width={6}>
@@ -151,6 +207,10 @@ class EventDashboard extends Component {
               handleCancel={this.handleCancel}
             />
           )} */}
+        </Grid.Column>
+
+        <Grid.Column width={10}>
+          <Loader active={loading} />
         </Grid.Column>
       </Grid>
     );
